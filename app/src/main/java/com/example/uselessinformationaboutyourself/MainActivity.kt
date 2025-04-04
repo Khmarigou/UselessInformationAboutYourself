@@ -10,13 +10,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Menu
@@ -42,14 +38,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.uselessinformationaboutyourself.ui.theme.UselessInformationAboutYourselfTheme
+import com.example.uselessinformationaboutyourself.viewModels.UserViewModel
+import com.example.uselessinformationaboutyourself.views.EditScreen
+import com.example.uselessinformationaboutyourself.views.ViewScreen
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -59,6 +56,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel = UserViewModel(application)
         enableEdgeToEdge()
         setContent {
 
@@ -66,33 +64,22 @@ class MainActivity : ComponentActivity() {
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
                 val colors = MaterialTheme.colorScheme
-                val context = LocalContext.current
-                var name by remember { mutableStateOf(getName(context)) }
 
                 ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = {
-                        Column (
+                        EditScreen(viewModel,
                             modifier = Modifier
-                                .background(colors.primary)
+                                .background(colors.primaryContainer)
                                 .fillMaxHeight()
                                 .fillMaxWidth(.7f)
                                 .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(20.dp)
-                        ) {
-                            Spacer(modifier = Modifier.statusBarsPadding())
-                            TextField(
-                                value = name,
-                                onValueChange = {
-                                    name = it
-                                    saveName(context, it)
-                                },
-                                label = { Text("Name") },
-                                singleLine = true
-                            )
-                            DatePickerFieldToModal(context = context)
-                        }
+                            onSave = {
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                            }
+                        )
                     },
                     scrimColor = Color.Gray,
                 ) {
@@ -113,25 +100,12 @@ class MainActivity : ComponentActivity() {
                             )
                                  },
                         content = { innerPadding ->
-                            Text("Contenu principal", modifier = Modifier.padding(innerPadding))
+                            ViewScreen(viewModel, modifier = Modifier.padding(innerPadding))
                         }
                     )
                 }
             }
         }
-    }
-}
-
-private fun getName(context: Context): String {
-    val sharedPreferences = context.getSharedPreferences("user_prefs", MODE_PRIVATE)
-    return sharedPreferences.getString("name", "") ?: ""
-}
-
-private fun saveName(context: Context, name: String) {
-    val sharedPreferences = context.getSharedPreferences("user_prefs", MODE_PRIVATE)
-    with(sharedPreferences.edit()) {
-        putString("name", name)
-        apply()
     }
 }
 
