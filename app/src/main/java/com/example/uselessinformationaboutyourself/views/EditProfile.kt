@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.uselessinformationaboutyourself.viewModels.UserViewModel
 import java.text.SimpleDateFormat
@@ -39,7 +41,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun EditScreen(viewModel: UserViewModel, modifier: Modifier, onSave: () -> Unit = {}) {
+fun EditScreen(viewModel: UserViewModel, modifier: Modifier = Modifier, onSave: () -> Unit = {}) {
     val user by viewModel.user.collectAsState()
 
     // Initialise les états avec les valeurs récupérées
@@ -64,12 +66,24 @@ fun EditScreen(viewModel: UserViewModel, modifier: Modifier, onSave: () -> Unit 
             verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         Text("Votre profil")
-        TextField(value = name, onValueChange = { name = it }, label = { Text("Nom") })
+        TextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Nom") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
+        )
         DatePickerField(
             birthDate = birthDate,
             onClick = { showDatePicker = true }
         )
-        TextField(value = height, onValueChange = { height = it }, label = { Text("Taille (cm)") })
+        TextField(
+            value = height,
+            onValueChange = { height = it },
+            label = { Text("Taille (cm)") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
+        )
 
         Button(onClick = {
             viewModel.saveUser(name, birthDate, height.toIntOrNull() ?: 0)
