@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,7 +25,7 @@ fun ViewScreen(viewModel: UserViewModel, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
 
     user?.let { user ->
-        Column(
+        LazyColumn (
             modifier = modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -32,18 +33,24 @@ fun ViewScreen(viewModel: UserViewModel, modifier: Modifier = Modifier) {
             val componentModifier = Modifier
                 .background(color = colors.secondaryContainer, shape = RoundedCornerShape(8.dp))
                 .padding(8.dp)
-            AgeDisplay(
-                user.birthDate,
-                modifier = componentModifier
-            )
-            HeightComparaisons(
-                user.height,
-                modifier = componentModifier
-            )
-            HeartDetails(
-                user.birthDate,
-                modifier = componentModifier
-            )
+            item {
+                AgeDisplay(
+                    user.birthDate,
+                    modifier = componentModifier
+                )
+            }
+            item {
+                HeightComparaisons(
+                    user.height,
+                    modifier = componentModifier
+                )
+            }
+            item {
+                HeartDetails(
+                    user.birthDate,
+                    modifier = componentModifier
+                )
+            }
         }
     } ?: Text("Aucune donnée enregistrée", modifier = Modifier.padding(16.dp))
 }
