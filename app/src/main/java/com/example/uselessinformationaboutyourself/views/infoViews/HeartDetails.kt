@@ -27,13 +27,13 @@ fun HeartDetails(
     Column(
         modifier = modifier
     ) {
-        val BPM = 70 // Example heart rate
+        val bpm = 70 // Example heart rate
         val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
         val inputDate = LocalDate.parse(birthDateString, formatter)
         var currentTime by remember { mutableStateOf(LocalDateTime.now()) }
         val totalSecond = currentTime.second + currentTime.minute * 60 + currentTime.hour * 3600
-        val totalBeatsToday = totalSecond * BPM / 60
-        val totalBeatsLife = ChronoUnit.SECONDS.between(inputDate.atStartOfDay(), currentTime) * BPM / 60
+        val totalBeatsToday = totalSecond * bpm / 60
+        val totalBeatsLife = ChronoUnit.SECONDS.between(inputDate.atStartOfDay(), currentTime) * bpm / 60
 
 
         // Met à jour chaque seconde
@@ -49,9 +49,4 @@ fun HeartDetails(
         Text("• Votre coeur a battu ${"%,d".format(totalBeatsLife).replace(',', ' ')} fois depuis votre naissance")
 
     }
-}
-
-fun getCurrentTime(): String {
-    val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-    return dateFormat.format(Date())
 }
