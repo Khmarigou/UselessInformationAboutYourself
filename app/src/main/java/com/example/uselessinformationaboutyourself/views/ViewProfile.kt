@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.uselessinformationaboutyourself.viewModels.UserViewModel
 import com.example.uselessinformationaboutyourself.views.infoViews.AgeDisplay
+import com.example.uselessinformationaboutyourself.views.infoViews.HeartDetails
 import com.example.uselessinformationaboutyourself.views.infoViews.HeightComparaisons
 
 @Composable
@@ -38,6 +39,10 @@ fun ViewScreen(viewModel: UserViewModel, modifier: Modifier = Modifier) {
             )
             HeightComparaisons(
                 user.height,
+                modifier = componentModifier
+            )
+            HeartDetails(
+                user.birthDate,
                 modifier = componentModifier
             )
         }
