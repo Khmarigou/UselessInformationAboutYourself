@@ -17,6 +17,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -30,11 +31,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.uselessinformationaboutyourself.ui.components.GoodTextField
 import com.example.uselessinformationaboutyourself.viewModels.UserViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -51,6 +56,9 @@ fun EditScreen(viewModel: UserViewModel, modifier: Modifier = Modifier, onSave: 
     var showDatePicker by remember { mutableStateOf(false) }
     val currentFocus = LocalFocusManager.current
 
+    // Focus requester
+    val focusRequesterHeight = remember { FocusRequester() }
+
     // Quand user est dispo (chargé depuis la DB), on met à jour les champs si vides
     LaunchedEffect(user) {
         user?.let {
@@ -66,7 +74,7 @@ fun EditScreen(viewModel: UserViewModel, modifier: Modifier = Modifier, onSave: 
             verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         Text("Votre profil")
-        TextField(
+        GoodTextField (
             value = name,
             onValueChange = { name = it },
             label = { Text("Nom") },
@@ -77,12 +85,14 @@ fun EditScreen(viewModel: UserViewModel, modifier: Modifier = Modifier, onSave: 
             birthDate = birthDate,
             onClick = { showDatePicker = true }
         )
-        TextField(
+        GoodTextField (
             value = height,
             onValueChange = { height = it },
             label = { Text("Taille (cm)") },
             singleLine = true,
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next)
+            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+            modifier = Modifier
+                .focusRequester(focusRequesterHeight)
         )
 
         Button(onClick = {
@@ -98,6 +108,7 @@ fun EditScreen(viewModel: UserViewModel, modifier: Modifier = Modifier, onSave: 
                 onDateSelected = {
                     it?.let { birthDate = convertMillisToDate(it) }
                     showDatePicker = false
+                    focusRequesterHeight.requestFocus()
                 },
                 onDismiss = { showDatePicker = false }
             )
@@ -110,14 +121,11 @@ fun DatePickerField(
     birthDate: String,
     onClick: () -> Unit
 ) {
-    TextField(
+    GoodTextField (
         value = birthDate,
         onValueChange = {},
         label = { Text("Date de naissance") },
         placeholder = { Text("MM/DD/YYYY") },
-        trailingIcon = {
-            Icon(Icons.Default.DateRange, contentDescription = "Date de naissance")
-        },
         modifier = Modifier
             .fillMaxWidth()
             .pointerInput(Unit) {
@@ -125,6 +133,11 @@ fun DatePickerField(
                     awaitFirstDown(pass = PointerEventPass.Initial)
                     val up = waitForUpOrCancellation(pass = PointerEventPass.Initial)
                     if (up != null) onClick()
+                }
+            }
+            .onFocusChanged {
+                if (it.isFocused) {
+                    onClick()
                 }
             }
     )
