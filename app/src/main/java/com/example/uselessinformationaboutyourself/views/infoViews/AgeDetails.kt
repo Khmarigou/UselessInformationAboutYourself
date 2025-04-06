@@ -1,13 +1,15 @@
 package com.example.uselessinformationaboutyourself.views.infoViews
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 @Composable
-fun AgeDisplay(birthDateString: String) {
+fun AgeDisplay(birthDateString: String, modifier: Modifier = Modifier) {
     //TODO: Add hours/minutes/seconds
     val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
     val inputDate = LocalDate.parse(birthDateString, formatter)
@@ -18,8 +20,12 @@ fun AgeDisplay(birthDateString: String) {
     val monthsDifference = ChronoUnit.MONTHS.between(inputDate, today)
     val yearsDifference = ChronoUnit.YEARS.between(inputDate, today)
 
-    Text("Vous avez $yearsDifference ans")
-    Text("ou $monthsDifference mois")
-    Text("ou $weeksDifference semaines")
-    Text("ou $daysDifference jours")
+    Column(
+        modifier = modifier
+    ) {
+        Text("Vous avez $yearsDifference ans")
+        Text("ou $monthsDifference mois")
+        Text("ou $weeksDifference semaines")
+        Text("ou $daysDifference jours")
+    }
 }
