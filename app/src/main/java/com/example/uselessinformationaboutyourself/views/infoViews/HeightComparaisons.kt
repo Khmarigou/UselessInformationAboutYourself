@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.uselessinformationaboutyourself.ui.components.TextTitle
 
 @Composable
 fun HeightComparaisons(height: Int, modifier: Modifier = Modifier) {
@@ -16,9 +17,10 @@ fun HeightComparaisons(height: Int, modifier: Modifier = Modifier) {
     Column (
         modifier = modifier
     ) {
-        Text("On peut vous placer ${"%.2f".format(heightEiffelTower / heightInM)} fois dans la Tour Eiffel")
-        Text("On peut vous placer ${"%.2f".format(heightStatueOfLiberty / heightInM)} fois dans la Statue de la Liberté")
-        Text("On peut vous placer ${"%.2f".format(heightEmpireStateBuilding / heightInM)} fois dans l'Empire State Building")
-        Text("On peut vous placer ${"%.2f".format(heightBurjKhalifa / heightInM)} fois dans le Burj Khalifa")
+        TextTitle("Votre taille")
+        Text("• On peut vous placer ${"%.2f".format(heightEiffelTower / heightInM)} fois dans la Tour Eiffel")
+        Text("• On peut vous placer ${"%.2f".format(heightStatueOfLiberty / heightInM)} fois dans la Statue de la Liberté")
+        Text("• On peut vous placer ${"%.2f".format(heightEmpireStateBuilding / heightInM)} fois dans l'Empire State Building")
+        Text("• On peut vous placer ${"%.2f".format(heightBurjKhalifa / heightInM)} fois dans le Burj Khalifa")
     }
 }

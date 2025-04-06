@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.uselessinformationaboutyourself.ui.components.TextTitle
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -23,9 +24,10 @@ fun AgeDisplay(birthDateString: String, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
     ) {
-        Text("Vous avez $yearsDifference ans")
-        Text("ou $monthsDifference mois")
-        Text("ou $weeksDifference semaines")
-        Text("ou $daysDifference jours")
+        TextTitle("Votre âge")
+        Text("• $yearsDifference ans")
+        Text("• $monthsDifference mois")
+        Text("• $weeksDifference semaines")
+        Text("• $daysDifference jours")
     }
 }
